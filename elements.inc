@@ -32,7 +32,7 @@
     }
 }
 
-#declare G_Bas_Socle = box {
+#declare G_Bas_Socle1 = box {
     <0, 0, 0>, <10, 1.2, 6>
 }
 
@@ -54,14 +54,82 @@
     }
 }
 
-#declare G_Paroi_Socle = difference {
-    box {
-        <0, 0, 0>, <10.2, 10, 1> 
+#declare G_Paroi_Socle = box {
+        <0, 0, 0>, <9.4, 10, 1> 
+}
+
+#declare G_Decoupe_Socle = union {
+        object {
+            G_Socle_Clipper
+            translate < -2, 0, -2>
+        }
+        object {
+            G_Socle_Clipper
+            translate <10 - 1, 0, -2>
+        }
+        object {
+            G_Socle_Clipper
+            translate < -2, 0, 6 - 1>
+        }
+        object {
+            G_Socle_Clipper
+            translate <10 - 1, 0, 6 - 1>
+        }
+}
+
+#declare G_Bas_Socle = difference {
+    object {
+        G_Bas_Socle1
     }
-    cylinder {
-        <14, 12, -1>, <14, 12, 2>, 10
+    object {
+        G_Decoupe_Socle
     }
 }
+
+#declare G_Socle = union {
+    object {
+        G_Bas_Socle
+    }
+    object {
+        G_Bas_Socle
+        translate <0, 10.8, 0>
+    }
+    object {
+        G_Paroi_Socle
+        translate < .3, .8, 2.5>
+    }
+}
+
+#declare G_Corne1 = sphere_sweep {
+    cubic_spline 
+    4,
+    < -50, 4, 0>, 1
+    < -14, 0, 0>, 1
+    <0, 20, 0>, 4
+    <0, 60, 0>, 4
+}
+
+#declare G_Corne2 = sphere_sweep {
+    cubic_spline 
+    4,
+    < -50, 4, 0>, .9
+    < -14, 0, 0>, .9
+    <0, 20, 0>, 3.9
+    <0, 60, 0>, 3.9
+}
+
+#declare G_Corne = difference {
+    object {
+        G_Corne1
+    }
+    object {
+        G_Corne2
+    }
+    box {
+        < -5, 20, -5>, <5, 25, 5>
+    }
+}
+
 
 // 2 - Matériaux
 
@@ -111,6 +179,21 @@
     T_Wood7
 }
 
+#declare M_Verre = texture {
+    pigment {
+        rgbf <.95, .95, .95, .9>
+    }
+    finish {
+        ambient .1
+        diffuse .5
+        specular .9
+        reflection {
+            0.1, 1
+        }
+        ior 1.2
+    }
+}
+
 // 3 - Habillage
 
 #declare H_Carte_Dos = object {
@@ -132,13 +215,13 @@
 }
 
 #declare H_Socle = object {
-    G_Bas_Socle
+    G_Socle
     texture { M_Socle }
 }
 
-#declare H_Paroi_Socle = object {
-    G_Paroi_Socle
-    texture { M_Socle }
+#declare H_Corne = object {
+    G_Corne
+    texture { M_Verre }
 }
 
 // 4 - Assemblage
@@ -192,57 +275,3 @@
     }
 }
 
-#declare Decoupe_Socle = union {
-        object {
-            G_Socle_Clipper
-            translate <-2, 0, -2>
-        }
-        object {
-            G_Socle_Clipper
-            translate <10 - 1, 0, -2>
-        }
-        object {
-            G_Socle_Clipper
-            translate <-2, 0, 6 - 1>
-        }
-        object {
-            G_Socle_Clipper
-            translate <10 - 1, 0, 6 - 1>
-        }
-
-    texture { M_Socle }
-}
-
-#declare Bas_Socle = difference {
-    object {
-        H_Socle
-    }
-    object {
-        Decoupe_Socle
-    }
-}
-
-#declare Haut_Socle = difference {
-    object {
-        Bas_Socle
-    }
-    cylinder {
-        <6, -1, 3>, <6, 2, 3>, 2
-    }
-
-    texture { M_Socle }
-}
-
-#declare Socle = union {
-    object {
-        Bas_Socle
-    }
-    object {
-        Haut_Socle
-        translate <0, 9.6, 0>
-    }
-    object {
-        H_Paroi_Socle
-        translate <-.1, .8, 2.5>
-    }
-}
