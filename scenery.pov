@@ -44,3 +44,8 @@ object {
     Corne2
     translate < -10, 0, -10>
 }
+
+object {
+    H_Jenga
+    translate < -20, 0, 0>
+}

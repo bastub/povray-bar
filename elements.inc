@@ -1,12 +1,14 @@
 #include "colors.inc"
 #include "textures.inc"
 #include "woods.inc"
+#include "shapes.inc"
 
 
 // 0 - Variables
 
 #declare V_Arrondi_Carte = .4;
 #declare V_Arrondi_Socle = 1;
+#declare RandomSeed = seed(1);
 
 // 1 - Modélisation géométrique
 
@@ -191,6 +193,59 @@
     }
 }
 
+#declare G_Planchette = Round_Box(< 0, 0, 0 >, < 2.5, 1.5, 7.5 >, 0.2, true)
+
+#declare G_Etage1 = union {
+    object {
+        G_Planchette
+    }
+    object {
+        G_Planchette
+        translate <2.51, 0, .2>
+    }
+    object {
+        G_Planchette
+        translate <5.3, 0, -.1>
+    }
+}
+
+#declare G_Etage2 = union {
+    object {
+        G_Planchette
+        translate <0, 0, .1>
+    }
+    object {
+        G_Planchette
+        translate <2.51, 0, .2>
+    }
+}
+
+#declare G_Jenga = union {
+    #for (i, 0, 10)
+        #for (j, 0, 2)
+            #if ((i = 1 & j = 1) | (i = 3 & j = 0) | (i = 4 & j != 1) | (i = 7 & j != 1))
+            #else
+                object {
+                    G_Planchette
+                    translate <j * 2.51, i * 3, rand(RandomSeed)/5>
+                }
+            #end
+        #end
+    #end
+
+    #for (i, 0, 10)
+        #for (j, 0, 2)
+            #if ((i = 2 & j = 0) | (i = 3 & j != 1) | (i = 4 & j = 2) | (i = 6 & j = 2) | (i = 10 & j != 0))
+            #else
+                object {
+                    G_Planchette
+                    rotate <0, 90, 0>
+                    translate <rand(RandomSeed)/5, 1.5+ i * 3, 2.5 + j * 2.51>
+                }
+            #end
+        #end
+    #end
+}
 
 // 2 - Matériaux
 
@@ -237,7 +292,7 @@
 }
 
 #declare M_Socle = texture {
-    T_Wood7
+    T_Wood8
 }
 
 #declare M_Verre = material {
@@ -275,6 +330,10 @@
 
 #declare M_Biere = texture {
     pigment { rgbf <.8, .8, 0, .8> }
+}
+
+#declare M_Bois = texture {
+    T_Wood7
 }
 
 // 3 - Habillage
@@ -320,6 +379,11 @@
 #declare H_Biere2 = object {
     G_Biere2
     texture { M_Biere }
+}
+
+#declare H_Jenga = object {
+    G_Jenga
+    texture { M_Bois }
 }
 
 // 4 - Assemblage
