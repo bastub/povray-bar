@@ -37,12 +37,10 @@ object {
 }
 
 object {
-    H_Socle
-    translate <10, 0, 0>
-    rotate <0, 27, 0>
+    Corne1
 }
 
 object {
-    H_Corne 
-    translate <0, 5, 0>
+    Corne2
+    translate < -10, 0, -10>
 }

@@ -6,6 +6,21 @@ light_source {
 camera {
     right x * image_width / image_height
     up y
-    location <4, 40, 40>
+    location <4, 30, 40>
     look_at <10, 5, 0>
+}
+
+cylinder {
+    <0, 0, 0>, <500, 0, 0>, .1
+    pigment { color rgb <1, 0, 0> } 
+}
+
+cylinder {
+    <0, 0, 0>, <0, 500, 0>, .1
+    pigment { color rgb <0, 1, 0> } 
+}
+
+cylinder {
+    <0, 0, 0>, <0, 0, 500>, .1
+    pigment { color rgb <0, 0, 1> } 
 }
