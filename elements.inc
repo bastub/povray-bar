@@ -4,18 +4,30 @@
 #include "shapes.inc"
 
 
-// 0 - Variables
+// |----------------------------------------------------------------------|
+// |-------------------------- 0 - Variables -----------------------------|
+// |----------------------------------------------------------------------|
 
 #declare V_Arrondi_Carte = .4;
 #declare V_Arrondi_Socle = 1;
 #declare RandomSeed = seed(1);
 
-// 1 - Modélisation géométrique
 
+
+
+
+// |----------------------------------------------------------------------|
+// |-------------------- I - Modélisation géométrique --------------------|
+// |----------------------------------------------------------------------|
+
+// I.1 - Modèles des cartes
+
+// Boite de la carte, pour l'instant cube de 1x1x1 pour appliquer la texture puis la scale
 #declare G_Carte = box {
     <0, 0, 0>, <1, 1, 1>   
 }
 
+// Objet qui permettra de découper la carte pour lui donner une forme arrondie
 #declare G_Carte_Clipper = difference {
     box {
         <0, 0, -1>, <1, 1, 1>
@@ -34,10 +46,74 @@
     }
 }
 
-#declare G_Bas_Socle1 = box {
+// ------
+// I.2. - Modélisation des boissons
+
+// I.2.1. - Modèles des cornes en verre
+
+// Paroi extérieur d'une corne
+#declare G_Corne1 = sphere_sweep {
+    cubic_spline 
+    4,
+    < -50, 4, 0>, .8
+    < -14, 0, 0>, .8
+    <0, 23, 0>, 3
+    <0, 60, 0>, 3
+}
+
+// Paroi intérieur d'une corne
+#declare G_Corne2 = sphere_sweep {
+    cubic_spline 
+    4,
+    < -50, 4, 0>, .7
+    < -14, 0, 0>, .7
+    <0, 23, 0>, 2.9
+    <0, 60, 0>, 2.9
+}
+
+// Création d'une corne creuse
+#declare G_Corne = difference {
+    object {
+        G_Corne1
+    }
+    object {
+        G_Corne2
+    }
+    box {
+        < -5, 23, -5>, <5, 30, 5>
+    }
+}
+
+// Objet de la forme d'une corne permettant de creuser le socle de la corne
+#declare G_Corne3 = sphere_sweep {
+    cubic_spline 
+    4,
+    < -50, 4, 0>, .9
+    < -14, 0, 0>, .9
+    <0, 23, 0>, 3.1
+    <0, 60, 0>, 3.1
+}
+
+// Objet de la forme d'une corne permettant de créer la bière 
+#declare G_Corne4 = sphere_sweep {
+    cubic_spline 
+    4,
+    < -50, 4, 0>, .69
+    < -14, 0, 0>, .69
+    <0, 23, 0>, 2.89
+    <0, 60, 0>, 2.89
+}
+
+
+// ---
+// I.2.2. - Modèle du socle
+
+// Base du socle des cornes (Partie haute et partie basse) sans bords arrondis
+#declare G_Base_Socle1 = box {
     <0, 0, 0>, <14, 1.2, 8>
 }
 
+// Objet qui permettra de découper le socle pour lui donner une forme arrondie
 #declare G_Socle_Clipper = difference {
     box {
         <0, -1, 0>, <3, 2, 3>
@@ -56,10 +132,7 @@
     }
 }
 
-#declare G_Paroi_Socle = box {
-        <0, 0, 0>, <13, 12, 1.4> 
-}
-
+// Union de 4 clippers pour découper la base du socle
 #declare G_Decoupe_Socle = union {
         object {
             G_Socle_Clipper
@@ -79,21 +152,28 @@
         }
 }
 
-#declare G_Bas_Socle = difference {
+// Paroi du socle
+#declare G_Paroi_Socle = box {
+        <0, 0, 0>, <13, 12, 1.4> 
+}
+
+// Base du socle avec bords arrondis
+#declare G_Base_Socle = difference {
     object {
-        G_Bas_Socle1
+        G_Base_Socle1
     }
     object {
         G_Decoupe_Socle
     }
 }
 
+// Socle des cornes pas encore creusé
 #declare G_Socle1 = union {
     object {
-        G_Bas_Socle
+        G_Base_Socle
     }
     object {
-        G_Bas_Socle
+        G_Base_Socle
         translate <0, 12.8, 0>
     }
     object {
@@ -102,54 +182,7 @@
     }
 }
 
-#declare G_Corne1 = sphere_sweep {
-    cubic_spline 
-    4,
-    < -50, 4, 0>, .8
-    < -14, 0, 0>, .8
-    <0, 23, 0>, 3
-    <0, 60, 0>, 3
-}
-
-#declare G_Corne2 = sphere_sweep {
-    cubic_spline 
-    4,
-    < -50, 4, 0>, .7
-    < -14, 0, 0>, .7
-    <0, 23, 0>, 2.9
-    <0, 60, 0>, 2.9
-}
-
-#declare G_Corne3 = sphere_sweep {
-    cubic_spline 
-    4,
-    < -50, 4, 0>, .9
-    < -14, 0, 0>, .9
-    <0, 23, 0>, 3.1
-    <0, 60, 0>, 3.1
-}
-
-#declare G_Corne4 = sphere_sweep {
-    cubic_spline 
-    4,
-    < -50, 4, 0>, .69
-    < -14, 0, 0>, .69
-    <0, 23, 0>, 2.89
-    <0, 60, 0>, 2.89
-}
-
-#declare G_Corne = difference {
-    object {
-        G_Corne1
-    }
-    object {
-        G_Corne2
-    }
-    box {
-        < -5, 23, -5>, <5, 30, 5>
-    }
-}
-
+// Socle des cornes creusé
 #declare G_Socle = difference {
     object {
         G_Socle1
@@ -166,6 +199,11 @@
     }
 }
 
+
+// ---
+// I.2.3. - Modèle de la sangle
+
+// Sangle de la corne
 #declare Sangle = difference {
     cylinder {
         <0, 0, 0>, <0, 1, 0>, 2
@@ -175,6 +213,11 @@
     }
 }
 
+
+// ---
+// II.2.4. - Modèles de la bière
+
+// Première bière, pas trop entamée
 #declare G_Biere1 = difference {
     object {
         G_Corne4
@@ -184,7 +227,8 @@
     }
 }
 
-#declare G_Biere2 = difference {
+// Deuxième bière, un peu plus entamée
+#declare G_BiereBis = difference {
     object {
         G_Corne4
     }
@@ -193,33 +237,56 @@
     }
 }
 
+
+// ---
+// I.2.5. - Modèles de la mousse
+
+// Pavé de mousse qui sera ensuite découpée
+#declare G_Mousse1 = blob {
+    threshold .65
+    #for (i, 0, 50)
+        #for (j, 0, 50)
+            sphere {
+            < i/5, rand(RandomSeed)/3, j/5 >, 1, 1
+            }
+        #end
+    #end
+}
+
+// Mousse de la première bière
+#declare G_Mousse = intersection {
+    object {
+        G_Mousse1 
+        translate <4.9, 23, -1>
+    }
+
+    object {
+        G_Corne4
+        translate <10.1, 2, 4>
+    }
+}
+
+// Mousse de la deuxième bière
+#declare G_MousseBis = intersection {
+    object {
+        G_Mousse1 
+        translate <4.9, 19, -1>
+    }
+
+    object {
+        G_Corne4
+        translate <10.1, 2, 4>
+    }
+}
+
+
+// ------
+// I.3. - Modèles du Jenga
+
+// Planchettes du Jenga, boîte avec arrêtes et coins arrondis
 #declare G_Planchette = Round_Box(< 0, 0, 0 >, < 2.5, 1.5, 7.5 >, 0.2, true)
 
-#declare G_Etage1 = union {
-    object {
-        G_Planchette
-    }
-    object {
-        G_Planchette
-        translate <2.51, 0, .2>
-    }
-    object {
-        G_Planchette
-        translate <5.3, 0, -.1>
-    }
-}
-
-#declare G_Etage2 = union {
-    object {
-        G_Planchette
-        translate <0, 0, .1>
-    }
-    object {
-        G_Planchette
-        translate <2.51, 0, .2>
-    }
-}
-
+// Tour de Jenga
 #declare G_Jenga = union {
     #for (i, 0, 10)
         #for (j, 0, 2)
@@ -247,8 +314,41 @@
     #end
 }
 
-// 2 - Matériaux
 
+// ------
+// I.4. - Modèles du téléphone
+
+// I.4.1. - Modèle de la coque
+
+// Coque du téléphone, boîte avec arrêtes et coins arrondis, creusée et tronquée
+#declare G_Coque = difference {
+    Round_Box(< 0, 0, 0 >, < 16.2, 7.4, 1 >, 0.5, true)
+
+    Round_Box(< .1, .1, .1 >, < 16.1, 7.3, .9 >, 0.4, true)
+
+    box {
+        < -1, -1, -1>, <20, 8, .2>
+    }
+}
+
+
+// ---
+// I.4.2. - Modèle de l'écran
+
+// Ecran du téléphone, boîte avec arrêtes et coins arrondis
+#declare G_Ecran = Round_Box(< 0, 0, 0 >, < 16, 7.2, .8 >, 0.4, true)
+
+
+
+
+
+// |----------------------------------------------------------------------|
+// |--------------------------- II - Matériaux ---------------------------|
+// |----------------------------------------------------------------------|
+
+// II.1. - Matériaux des cartes
+
+// Dos d'une carte (image)
 #declare M_Carte_Dos = texture {
     pigment {
         image_map {
@@ -263,6 +363,7 @@
     }
 }
 
+// As de pique (image)
 #declare M_Carte_As_Pique = texture {
     pigment {
         image_map {
@@ -277,6 +378,7 @@
     }
 }
 
+// Reine de coeur (image)
 #declare M_Carte_Reine_Coeur = texture {
     pigment {
         image_map {
@@ -291,10 +393,16 @@
     }
 }
 
+
+// ------
+// II.2. - Matériaux des boissons 
+
+// Socle (bois)
 #declare M_Socle = texture {
     T_Wood8
 }
 
+// Corne (verre)
 #declare M_Verre = material {
     texture {
         pigment { color rgbf <1, 1, 1, .9> }
@@ -319,6 +427,7 @@
     }
 }
 
+// Sangle (cuir)
 #declare M_Cuir = texture {
     pigment { rgb <.3, .2, .1> }
     finish {
@@ -328,66 +437,164 @@
     }
 }
 
+// Bière (bière)
 #declare M_Biere = texture {
     pigment { rgbf <.8, .8, 0, .8> }
 }
 
-#declare M_Bois = texture {
+// Mousse (mousse)
+#declare M_Mousse = texture {
+    pigment { rgbf <1, 1, 1, .1> }
+    finish {
+        ambient .1
+        diffuse .5
+        specular .5
+    }
+}
+
+
+// ------
+// II.3. - Matériaux du Jenga
+
+// Jenga (bois)
+#declare M_Jenga = texture {
     T_Wood7
 }
 
-// 3 - Habillage
 
+// ------
+// II.4. - Matériaux du téléphone
+
+// Coque (silicone rouge)
+#declare M_Coque = texture {
+    pigment { rgb <1, 0, 0> }
+}
+
+// Ecran (image)
+#declare M_Ecran = texture {
+    pigment {
+        image_map {
+            jpeg "images/ecran.jpg"
+            map_type 0
+        }
+        scale <16, 7.2, 1>
+    }
+}
+
+
+
+
+
+// |----------------------------------------------------------------------|
+// |--------------------------- III - Habillage --------------------------|
+// |----------------------------------------------------------------------|
+
+// III.1. - Habillage des cartes
+
+// Dos d'une carte
 #declare H_Carte_Dos = object {
     G_Carte
     texture { M_Carte_Dos }
     scale <6.4, 8.9, .01>
 }
 
+// As de pique
 #declare H_Devant_As_Pique = object {
     G_Carte
     texture { M_Carte_As_Pique }
     scale <6.4, 8.9, .01>
 }
 
+// Reine de coeur
 #declare H_Devant_Reine_Coeur = object {
     G_Carte
     texture { M_Carte_Reine_Coeur }
     scale <6.4, 8.9, .01>
 }
 
+
+// ------
+// III.2. - Habillage des boissons
+
+// Socle
 #declare H_Socle = object {
     G_Socle
     texture { M_Socle }
 }
 
+// Corne
 #declare H_Corne = object {
     G_Corne
     material { M_Verre }
 }
 
+// Sangle
 #declare H_Sangle = object {
     Sangle
     texture { M_Cuir }
 }
 
+// Première bière
 #declare H_Biere1 = object {
     G_Biere1
     texture { M_Biere }
 }
 
-#declare H_Biere2 = object {
-    G_Biere2
+// Deuxième bière
+#declare H_BiereBis = object {
+    G_BiereBis
     texture { M_Biere }
 }
 
-#declare H_Jenga = object {
-    G_Jenga
-    texture { M_Bois }
+// Première mousse
+#declare H_Mousse = object {
+    G_Mousse
+    texture { M_Mousse }
 }
 
-// 4 - Assemblage
+// Deuxième mousse
+#declare H_MousseBis = object {
+    G_MousseBis
+    texture { M_Mousse }
+}
 
+
+// ------
+// III.3. - Habillage du Jenga
+
+// Jenga
+#declare H_Jenga = object {
+    G_Jenga
+    texture { M_Jenga }
+}
+
+
+// ------
+// III.4. - Habillage du téléphone
+
+// Coque
+#declare H_Coque = object {
+    G_Coque
+    texture { M_Coque }
+}
+
+// Ecran
+#declare H_Ecran = object {
+    G_Ecran
+    texture { M_Ecran }
+}
+
+
+
+
+
+// |--------------------------------------------------------------------|
+// |--------------------------- IV - Assemblage ------------------------|
+// |--------------------------------------------------------------------|
+
+// IV.1. - Assemblage des cartes
+
+// Carte
 #declare Decoupe_Carte = union {
     object {
         G_Carte_Clipper
@@ -407,6 +614,7 @@
     }
 }
 
+// As de pique
 #declare As_Pique = difference {
     merge {
         object {
@@ -422,6 +630,7 @@
     }
 }
 
+// Reine de coeur
 #declare Reine_Coeur = difference {
     merge {
         object {
@@ -437,6 +646,11 @@
     }
 }
 
+
+// ------
+// IV.2. - Assemblage des boissons
+
+// Première corne
 #declare Corne1 = union {
     object {
         H_Socle
@@ -453,12 +667,17 @@
     }
 
     object {
+        H_Mousse
+    }
+
+    object {
         H_Sangle
         rotate < 0, 0, -30>
         translate <2.3, 6, 4>
     }
 }
 
+// Deuxième corne
 #declare Corne2 = union {
     object {
         H_Socle
@@ -470,8 +689,12 @@
     }
 
     object {
-        H_Biere2
+        H_BiereBis
         translate <10.1, 2, 4>
+    }
+
+    object {
+        H_MousseBis
     }
 
     object {
@@ -479,4 +702,22 @@
         rotate < 0, 0, -30>
         translate <2.3, 6, 4>
     }
+}
+
+
+// ------
+// IV.3. - Assemblage du Téléphone
+
+// Téléphone
+#declare Telephone = union {
+    object {
+        H_Coque
+    }
+    object {
+        H_Ecran
+        translate <.1, .1, .1>
+    }
+
+    rotate <90, 0, 0>
+    translate <0, 1, 0>
 }

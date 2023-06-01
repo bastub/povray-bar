@@ -6,8 +6,8 @@ light_source {
 camera {
     right x * image_width / image_height
     up y
-    location <30, 50, 40>
-    look_at <10, 15, 0>
+    location < 50, 50, 50>
+    look_at <25, 30, 35>
 }
 
 cylinder {

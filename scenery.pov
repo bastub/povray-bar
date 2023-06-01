@@ -38,6 +38,7 @@ object {
 
 object {
     Corne1
+    translate< -15, 0, 10>
 }
 
 object {
@@ -48,4 +49,9 @@ object {
 object {
     H_Jenga
     translate < -20, 0, 0>
+}
+
+object {
+    Telephone
+    translate <0, 0, 20>
 }
