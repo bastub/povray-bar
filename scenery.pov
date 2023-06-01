@@ -47,7 +47,7 @@ object {
 }
 
 object {
-    H_Jenga
+    Jenga
     translate < -20, 0, 0>
 }
 

@@ -22,9 +22,9 @@
 
 // I.1 - Modèles des cartes
 
-// Boite de la carte, pour l'instant cube de 1x1x1 pour appliquer la texture puis la scale
+// Boite de la carte
 #declare G_Carte = box {
-    <0, 0, 0>, <1, 1, 1>   
+    <0, 0, 0>, <6.4, 8.9, .01>
 }
 
 // Objet qui permettra de découper la carte pour lui donner une forme arrondie
@@ -43,6 +43,26 @@
     }
     cylinder {
         <1, 1, -2>, <1, 1, 2>, V_Arrondi_Carte
+    }
+}
+
+// Union de 4 clippers pour découper la carte
+#declare G_Decoupe_Carte = union {
+    object {
+        G_Carte_Clipper
+        translate < -1 + V_Arrondi_Carte, 8.9 - V_Arrondi_Carte, 0>
+    }
+    object {
+        G_Carte_Clipper
+        translate < -1 + V_Arrondi_Carte, -1 + V_Arrondi_Carte, 0>
+    }
+    object {
+        G_Carte_Clipper
+        translate <6.4 - V_Arrondi_Carte, 8.9 - V_Arrondi_Carte, 0>
+    }
+    object {
+        G_Carte_Clipper
+        translate <6.4 - V_Arrondi_Carte, -1 + V_Arrondi_Carte, 0>
     }
 }
 
@@ -241,7 +261,7 @@
 // ---
 // I.2.5. - Modèles de la mousse
 
-// Pavé de mousse qui sera ensuite découpée
+// Création d'un blob contenant 50 x 50 sphères avec une hauteur aléatoire
 #declare G_Mousse1 = blob {
     threshold .65
     #for (i, 0, 50)
@@ -286,33 +306,6 @@
 // Planchettes du Jenga, boîte avec arrêtes et coins arrondis
 #declare G_Planchette = Round_Box(< 0, 0, 0 >, < 2.5, 1.5, 7.5 >, 0.2, true)
 
-// Tour de Jenga
-#declare G_Jenga = union {
-    #for (i, 0, 10)
-        #for (j, 0, 2)
-            #if ((i = 1 & j = 1) | (i = 3 & j = 0) | (i = 4 & j != 1) | (i = 7 & j != 1))
-            #else
-                object {
-                    G_Planchette
-                    translate <j * 2.51, i * 3, rand(RandomSeed)/5>
-                }
-            #end
-        #end
-    #end
-
-    #for (i, 0, 10)
-        #for (j, 0, 2)
-            #if ((i = 2 & j = 0) | (i = 3 & j != 1) | (i = 4 & j = 2) | (i = 6 & j = 2) | (i = 10 & j != 0))
-            #else
-                object {
-                    G_Planchette
-                    rotate <0, 90, 0>
-                    translate <rand(RandomSeed)/5, 1.5+ i * 3, 2.5 + j * 2.51>
-                }
-            #end
-        #end
-    #end
-}
 
 
 // ------
@@ -355,6 +348,7 @@
             png "images/carte_dos.png"
             map_type 0
         }
+        scale <6.4, 8.9, .01>
     }
         finish {
         ambient .1
@@ -370,6 +364,7 @@
             png "images/carte_as_pique.png"
             map_type 0
         }
+        scale <6.4, 8.9, .01>
     }
     finish {
         ambient .1
@@ -385,6 +380,7 @@
             png "images/carte_reine_coeur.png"
             map_type 0
         }
+        scale <6.4, 8.9, .01>
     }
     finish {
         ambient .1
@@ -456,8 +452,8 @@
 // ------
 // II.3. - Matériaux du Jenga
 
-// Jenga (bois)
-#declare M_Jenga = texture {
+// Planchette (bois)
+#declare M_Planchette = texture {
     T_Wood7
 }
 
@@ -465,9 +461,9 @@
 // ------
 // II.4. - Matériaux du téléphone
 
-// Coque (silicone rouge)
+// Coque (silicone noir)
 #declare M_Coque = texture {
-    pigment { rgb <1, 0, 0> }
+    pigment { rgb <0, 0, 0> }
 }
 
 // Ecran (image)
@@ -495,21 +491,19 @@
 #declare H_Carte_Dos = object {
     G_Carte
     texture { M_Carte_Dos }
-    scale <6.4, 8.9, .01>
+    
 }
 
 // As de pique
 #declare H_Devant_As_Pique = object {
     G_Carte
     texture { M_Carte_As_Pique }
-    scale <6.4, 8.9, .01>
 }
 
 // Reine de coeur
 #declare H_Devant_Reine_Coeur = object {
     G_Carte
     texture { M_Carte_Reine_Coeur }
-    scale <6.4, 8.9, .01>
 }
 
 
@@ -562,10 +556,10 @@
 // ------
 // III.3. - Habillage du Jenga
 
-// Jenga
-#declare H_Jenga = object {
-    G_Jenga
-    texture { M_Jenga }
+// Planchette
+#declare H_Planchette = object {
+    G_Planchette
+    texture { M_Planchette }
 }
 
 
@@ -598,11 +592,11 @@
 #declare Decoupe_Carte = union {
     object {
         G_Carte_Clipper
-        translate <-1 + V_Arrondi_Carte, 8.9 - V_Arrondi_Carte, 0>
+        translate < -1 + V_Arrondi_Carte, 8.9 - V_Arrondi_Carte, 0>
     }
     object {
         G_Carte_Clipper
-        translate <-1 + V_Arrondi_Carte, -1 + V_Arrondi_Carte, 0>
+        translate < -1 + V_Arrondi_Carte, -1 + V_Arrondi_Carte, 0>
     }
     object {
         G_Carte_Clipper
@@ -720,4 +714,38 @@
 
     rotate <90, 0, 0>
     translate <0, 1, 0>
+}
+
+
+// ------
+// IV.4. - Assemblage du Jenga
+
+
+// Tour de Jenga
+#declare Jenga = union {
+    #for (i, 0, 10)
+        #for (j, 0, 2)
+            // Nous voulons que certaines planchettes soient manquantes
+            #if ((i = 1 & j = 1) | (i = 3 & j = 0) | (i = 4 & j != 1) | (i = 7 & j != 1))
+            #else
+                object {
+                    H_Planchette
+                    translate <j * 2.51, i * 3, rand(RandomSeed)/5>
+                }
+            #end
+        #end
+    #end
+
+    #for (i, 0, 10)
+        #for (j, 0, 2)
+            #if ((i = 2 & j = 0) | (i = 3 & j != 1) | (i = 4 & j = 2) | (i = 6 & j = 2) | (i = 10 & j != 0))
+            #else
+                object {
+                    H_Planchette
+                    rotate <0, 90, 0>
+                    translate <rand(RandomSeed)/5, 1.5+ i * 3, 2.5 + j * 2.51>
+                }
+            #end
+        #end
+    #end
 }

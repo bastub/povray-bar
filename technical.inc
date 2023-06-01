@@ -10,17 +10,17 @@ camera {
     look_at <25, 30, 35>
 }
 
-cylinder {
-    <0, 0, 0>, <500, 0, 0>, .1
-    pigment { color rgb <1, 0, 0> } 
-}
+// cylinder {
+//     <0, 0, 0>, <500, 0, 0>, .1
+//     pigment { color rgb <1, 0, 0> } 
+// }
 
-cylinder {
-    <0, 0, 0>, <0, 500, 0>, .1
-    pigment { color rgb <0, 1, 0> } 
-}
+// cylinder {
+//     <0, 0, 0>, <0, 500, 0>, .1
+//     pigment { color rgb <0, 1, 0> } 
+// }
 
-cylinder {
-    <0, 0, 0>, <0, 0, 500>, .1
-    pigment { color rgb <0, 0, 1> } 
-}
+// cylinder {
+//     <0, 0, 0>, <0, 0, 500>, .1
+//     pigment { color rgb <0, 0, 1> } 
+// }
