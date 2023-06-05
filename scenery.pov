@@ -55,3 +55,8 @@ object {
     Telephone
     translate <0, 0, 20>
 }
+
+object {
+    Bouteille
+    translate <0, 0, -20>
+}

@@ -299,6 +299,23 @@
     }
 }
 
+// I.2.6 - Modèle de la bouteille
+
+#declare G_Bouteille = lathe {
+    bezier_spline
+    40,
+    <0, 0>, <3, 0>, <3, 0>, <3, 2> 
+    <3, 2>, <3, 5>, <3, 5>, <3, 10> 
+    <3, 10>, <3, 16>, <1.7, 16>, <1.2, 20.8> 
+    <1.2, 20.8>, <1.5, 21.6>, <1.2, 21.6>, <1.2, 22.1>
+    <1.2, 22.1>, <1.4, 22.6>, <1.1, 22.6>, <1.1, 22.6>
+    <1.1, 22.6>, <1, 22.6>, <.8, 22.6>, <.9, 22>
+    <.9, 22>, <.9, 21.5>, <1.2, 21.5>, <.9, 20.7>
+    <.9, 20.7>, <1.4, 15.9>, <2.7, 15.9>, <2.7, 9.9>
+    <2.7, 9.9>, <2.7, 4.9>, <2.7, 4.9>, <2.7, 1.9> 
+    <2.7, 1.9>, <2.7, .3>, <2.7, .3>, <0, .3>
+}
+
 
 // ------
 // I.3. - Modèles du Jenga
@@ -330,8 +347,6 @@
 
 // Ecran du téléphone, boîte avec arrêtes et coins arrondis
 #declare G_Ecran = Round_Box(< 0, 0, 0 >, < 16, 7.2, .8 >, 0.4, true)
-
-
 
 
 
@@ -448,6 +463,31 @@
     }
 }
 
+// Bouteille de bière (verre)
+#declare M_Bouteille = material {
+    texture {
+        pigment { color rgbf <200/255, 165/255, 0, .7> }
+        finish { 
+            ambient 0
+            diffuse 0
+            specular 0.2
+            roughness 1e-3
+            reflection {
+                4e-3,
+                .95
+                fresnel on
+            }
+            conserve_energy
+        }
+    }
+    interior {
+        fade_color <.3, .12, 0>
+        fade_distance 10
+        fade_power 1e3
+        ior 1.2
+    }
+}
+
 
 // ------
 // II.3. - Matériaux du Jenga
@@ -550,6 +590,12 @@
 #declare H_MousseBis = object {
     G_MousseBis
     texture { M_Mousse }
+}
+
+// Bouteille de bière
+#declare H_Bouteille = object {
+    G_Bouteille
+    material { M_Bouteille }
 }
 
 
@@ -696,6 +742,10 @@
         rotate < 0, 0, -30>
         translate <2.3, 6, 4>
     }
+}
+
+#declare Bouteille = object {
+    H_Bouteille
 }
 
 
