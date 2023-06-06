@@ -1,0 +1,70 @@
+#version 3.7
+
+#include "colors.inc"
+#include "woods.inc"
+
+// 1 unitée = 1cm
+global_settings
+{
+    assumed_gamma 1.8
+    max_trace_level 5
+}
+
+// Variables
+#declare h = 114;
+#declare larg_cote = 75;
+
+// 1 - Modélisation Géométrique
+#declare Earth = plane {y, 0 }
+#declare Sky = plane{y, 290}
+#declare Square = difference {
+    box {<0, 0, 0>, <600, 300, 600>}
+    box{<0.1,0,0.1>, <590,300,590>}}
+#declare Box1 = box{<0,0,0>,<200,h,0+larg_cote>}
+#declare Box2 = box{<140,0,larg_cote>,<200,h,400>}
+#declare Box3 = box{<140,h+1,0>,<220,h+6,400+larg_cote>}
+
+
+// 2 - Matériaux
+#declare Bois = texture{T_Wood7 scale 60}
+
+// 3 - Habillage
+#declare Sol = object{Earth pigment{Gray30}}
+#declare Mur = object{Square pigment{Gray45}}
+#declare Plafond = object{Sky pigment{Gray25}}
+#declare ComptD = object{Box1 texture{Bois}}
+#declare ComptC = object{Box2 texture{Bois}}
+#declare Bord = object{Box3 pigment{White}}
+
+// 4 - Assemblage
+#declare Comptoir = union{
+    object{ComptC}
+    object{ComptD}
+    object{Bord}
+    object{Bord translate <-220, 0, -280> rotate<0,90,0>}
+}
+
+
+// 5 - Mise en scène
+object{Sol}
+object{Mur}
+object{Plafond}
+object{Comptoir}
+
+
+// Planche
+/**
+box {
+    <0,0.1,0>, <20,0.1,70> 
+}
+*/
+light_source{<300,260,300> White * 1}
+
+camera{
+    right x * image_width/image_height
+    up y
+    location <250, 170,350>
+    look_at <5,70,170>
+    //Champ de vision horizontal
+    angle 90
+}
