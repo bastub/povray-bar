@@ -6,7 +6,7 @@ light_source {
 camera {
     right x * image_width / image_height
     up y
-    location < 40, 30, 40>
+    location < 40, 40, 40>
     look_at <0, 20, 0>
 }
 

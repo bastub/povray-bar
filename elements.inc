@@ -224,7 +224,7 @@
 // I.2.3. - Modèle de la sangle
 
 // Sangle de la corne
-#declare Sangle = difference {
+#declare G_Sangle = difference {
     cylinder {
         <0, 0, 0>, <0, 1, 0>, 2
     }
@@ -314,6 +314,15 @@
     <.9, 20.7>, <1.4, 15.9>, <2.7, 15.9>, <2.7, 9.9>
     <2.7, 9.9>, <2.7, 4.9>, <2.7, 4.9>, <2.7, 1.9> 
     <2.7, 1.9>, <2.7, .3>, <2.7, .3>, <0, .3>
+}
+
+#declare G_Etiquette = difference {
+    cylinder {
+        <0, 0, 0>, <0, 8, 0>, 3.0001
+    }
+    cylinder {
+        <0, -1, 0>, <0, 9, 0>, 3
+    }
 }
 
 
@@ -449,8 +458,22 @@
 }
 
 // Bière (bière)
-#declare M_Biere = texture {
-    pigment { rgbf <.8, .8, 0, .8> }
+#declare M_Biere = material {
+    texture {
+        pigment { rgbf <.8, .8, 0, .8> }
+        finish {
+            ambient .5
+            diffuse .5
+            specular .05
+            roughness 1e-3
+        }
+    }
+    interior {
+        ior 1.2
+        fade_color <.6, .6, 0>
+        fade_distance 10
+        fade_power 10
+    }
 }
 
 // Mousse (mousse)
@@ -485,6 +508,22 @@
         fade_distance 10
         fade_power 1e3
         ior 1.2
+    }
+}
+
+#declare M_Etiquette = texture {
+    pigment {
+        image_map {
+            png "images/etiquette.png"
+            map_type 2
+            once
+        }
+        scale <18.85, 8, 18.85>
+    }
+    finish {
+        ambient .1
+        diffuse .5
+        specular .5
     }
 }
 
@@ -564,20 +603,20 @@
 
 // Sangle
 #declare H_Sangle = object {
-    Sangle
+    G_Sangle
     texture { M_Cuir }
 }
 
 // Première bière
 #declare H_Biere1 = object {
     G_Biere1
-    texture { M_Biere }
+    material { M_Biere }
 }
 
 // Deuxième bière
 #declare H_BiereBis = object {
     G_BiereBis
-    texture { M_Biere }
+    material { M_Biere }
 }
 
 // Première mousse
@@ -596,6 +635,11 @@
 #declare H_Bouteille = object {
     G_Bouteille
     material { M_Bouteille }
+}
+
+#declare H_Etiquette = object {
+    G_Etiquette
+    texture { M_Etiquette }
 }
 
 
@@ -744,8 +788,15 @@
     }
 }
 
-#declare Bouteille = object {
-    H_Bouteille
+#declare Bouteille = union {
+    object {
+        H_Bouteille
+    }
+    object {
+        H_Etiquette
+        translate <0, 2, 0>
+        rotate <0, -14, 0>
+    }
 }
 
 
