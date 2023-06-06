@@ -53,7 +53,7 @@ object {
 
 object {
     Telephone
-    translate <0, 0, 20>
+    translate <0, 0, 0>
 }
 
 object {

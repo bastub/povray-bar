@@ -1,3 +1,5 @@
+#include "rad_def.inc"
+
 light_source {
     <-150, 500, 80>
     color rgb <1, 1, 1>
@@ -8,6 +10,11 @@ camera {
     up y
     location < 40, 40, 40>
     look_at <0, 20, 0>
+}
+
+global_settings {
+    assumed_gamma 1.8
+    radiosity { Rad_Settings(Radiosity_IndoorHQ, no, no) }
 }
 
 cylinder {
@@ -24,3 +31,4 @@ cylinder {
     <0, 0, 0>, <0, 0, 500>, .1
     pigment { color rgb <0, 0, 1> } 
 }
+

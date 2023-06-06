@@ -3,7 +3,6 @@
 #include "woods.inc"
 #include "shapes.inc"
 
-
 // |----------------------------------------------------------------------|
 // |-------------------------- 0 - Variables -----------------------------|
 // |----------------------------------------------------------------------|
@@ -318,7 +317,7 @@
 
 #declare G_Etiquette = difference {
     cylinder {
-        <0, 0, 0>, <0, 8, 0>, 3.0001
+        <0, 0, 0>, <0, 8, 0>, 3.1
     }
     cylinder {
         <0, -1, 0>, <0, 9, 0>, 3
@@ -554,6 +553,10 @@
         }
         scale <16, 7.2, 1>
     }
+    finish {
+        emission 1
+        diffuse .6
+    }
 }
 
 
@@ -635,11 +638,11 @@
 #declare H_Bouteille = object {
     G_Bouteille
     material { M_Bouteille }
-}
-
-#declare H_Etiquette = object {
-    G_Etiquette
-    texture { M_Etiquette }
+    texture { 
+        M_Etiquette
+        translate <0, 2, 0>
+        rotate <0, -14, 0> 
+    }
 }
 
 
@@ -788,15 +791,8 @@
     }
 }
 
-#declare Bouteille = union {
-    object {
-        H_Bouteille
-    }
-    object {
-        H_Etiquette
-        translate <0, 2, 0>
-        rotate <0, -14, 0>
-    }
+#declare Bouteille = object {
+    H_Bouteille
 }
 
 
