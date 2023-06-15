@@ -79,8 +79,9 @@ object{Banniere translate <20,160,0>}
 object{Wanted}
 
 light_source{
-    <300,260,300> White * 1 
-    area_light <0, 0, 0>, <500, 0, 500>, 5, 5 
+    <300,260,300> White * 1.2 
+    area_light <0, 0, 0>, <500, 290, 500>, 10, 10
+    jitter 
 }
 
 light_source{
